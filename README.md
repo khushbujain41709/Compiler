@@ -3,12 +3,20 @@
 Name - Khushbu Jain<br>
 Roll Number - 23115047<br>
 Branch - CSE 4th Semester<br>
+Github Link - https://github.com/khushbujain41709/Compiler.git
 
 This is a simple custom compiler built in C++ for parsing expressions and generating simulated assembly code.<br>
 I am using the Taylor series expansion of the exponential function e^x to compute its value using assembly. The equation implemented is : <br>
 e(x) = 1 + x + x^2/2 + x^3/6 + x^4/24<br>
 This approximation includes the first five terms of the Taylor series.<br>
 The Taylor series is a powerful mathematical tool used to approximate functions as an infinite sum of their derivatives at a single point (usually around x = 0, called a Maclaurin series).
+
+The KHUS operation(Custom Insruction) implements the following logic :<br>
+It takes three variables (x, y, z) as input<br>
+Computes y³ (y cubed) by multiplying yyy<br>
+Then performs either :<br>
+If z is positive: returns x + y³<br>
+If z is negative: returns x - y³
 
 ## Features
 

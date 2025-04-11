@@ -1,49 +1,41 @@
 #include "codegen.h"
 #include <bits/stdc++.h>
-
 #include <set>
 #include <sstream>
 #include <vector>
 #include <string>
 
 void generateAssembly(const std::vector<std::string>& tac, std::ostream& out) {
-    // Use ordered set to preserve insert order
     std::set<std::string> variables;
 
     // Collect all variables used in TAC
     for (const auto& line : tac) {
         std::istringstream iss(line);
-        std::string lhs, op, rhs1, rhs2;
-        iss >> lhs >> op >> rhs1;
-        if (iss >> op >> rhs2) {
-            if (!isdigit(lhs[0])) variables.insert(lhs);
-            if (!isdigit(rhs1[0])) variables.insert(rhs1);
-            if (!isdigit(rhs2[0])) variables.insert(rhs2);
-        }
+        std::string lhs, assign, rhs1, op, rhs2;
+        iss >> lhs >> assign >> rhs1 >> op >> rhs2;
+        if (!isdigit(lhs[0])) variables.insert(lhs);
+        if (!isdigit(rhs1[0])) variables.insert(rhs1);
+        if (!isdigit(rhs2[0])) variables.insert(rhs2);
     }
 
-    // Ensure x and t1 are declared first and made global
+    // Declare data section
     out << "section .data\n";
     out << "global x, t1\n";
     out << "x: dd 0\n";
     out << "t1: dd 0\n";
 
-    // Now output other variables (except x and t1 again)
     for (const auto& var : variables) {
         if (var != "x" && var != "t1") {
             out << var << ": dd 0\n";
         }
     }
 
-    // Section for code
     out << "\nsection .text\n";
     out << "global _start\n\n";
     out << "_start:\n";
 
     // _pow function
     out << "\n_pow:\n"
-        << "    ; Input: eax = base, ecx = exponent\n"
-        << "    ; Output: eax = result\n"
         << "    push ebx\n"
         << "    mov ebx, eax\n"
         << "    mov eax, 1\n"
@@ -57,7 +49,7 @@ void generateAssembly(const std::vector<std::string>& tac, std::ostream& out) {
         << "    pop ebx\n"
         << "    ret\n\n";
 
-    // Main instruction conversion
+    // Convert TAC to assembly
     for (const auto& line : tac) {
         std::istringstream iss(line);
         std::string dest, assign, src1, op, src2;
@@ -86,15 +78,26 @@ void generateAssembly(const std::vector<std::string>& tac, std::ostream& out) {
             out << "    mov eax, " << src1_ref << "\n"
                 << "    mov ecx, " << src2_ref << "\n"
                 << "    call _pow\n";
+        } else if (op == "?") {
+            // Handle as ternary condition: dest = src1 ? src2 : some_default
+            std::string label_false = ".false_" + dest;
+            std::string label_end = ".end_" + dest;
+
+            out << "    mov eax, " << src1_ref << "\n"
+                << "    cmp eax, 0\n"
+                << "    je " << label_false << "\n"
+                << "    mov eax, " << src2_ref << "\n"
+                << "    jmp " << label_end << "\n"
+                << label_false << ":\n"
+                << "    mov eax, 0 ; default false value\n"
+                << label_end << ":\n";
         }
 
         out << "    mov [" << dest << "], eax\n\n";
     }
 
-    // Exit syscall
-    out << "    ; Exit program\n"
+    out << "    ; Exit syscall\n"
         << "    mov eax, 1\n"
         << "    xor ebx, ebx\n"
         << "    int 0x80\n";
 }
-

@@ -1,12 +1,12 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include "lexer.h"
-
+using namespace std;
 struct Node {
-    std::string value;
+    string value;
     Node* left;
     Node* right;
 };
 
-Node* parse(const std::vector<Token>& tokens);
+Node* parse(const vector<Token>& tokens);
 #endif

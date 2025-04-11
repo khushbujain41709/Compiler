@@ -3,7 +3,6 @@ global x, t1
 x: dd 0
 t1: dd 0
 t10: dd 0
-t11: dd 0
 t2: dd 0
 t3: dd 0
 t4: dd 0
@@ -34,70 +33,64 @@ _pow:
     pop ebx
     ret
 
-    ; t1 =  e x
-    mov [t1], eax
-
-    ; t2 = 1 + x
+    ; t1 = 1 + x
     mov eax, 1
     add eax, [x]
-    mov [t2], eax
+    mov [t1], eax
 
-    ; t3 = x ^ 2
+    ; t2 = x ^ 2
     mov eax, [x]
     mov ecx, 2
     call _pow
-    mov [t3], eax
+    mov [t2], eax
 
-    ; t4 = t3 / 2
-    mov eax, [t3]
+    ; t3 = t2 / 2
+    mov eax, [t2]
     cdq
     mov ebx, 2
     idiv ebx
+    mov [t3], eax
+
+    ; t4 = t1 + t3
+    mov eax, [t1]
+    add eax, [t3]
     mov [t4], eax
 
-    ; t5 = t2 + t4
-    mov eax, [t2]
-    add eax, [t4]
-    mov [t5], eax
-
-    ; t6 = x ^ 3
+    ; t5 = x ^ 3
     mov eax, [x]
     mov ecx, 3
     call _pow
-    mov [t6], eax
+    mov [t5], eax
 
-    ; t7 = t6 / 6
-    mov eax, [t6]
+    ; t6 = t5 / 6
+    mov eax, [t5]
     cdq
     mov ebx, 6
     idiv ebx
+    mov [t6], eax
+
+    ; t7 = t4 + t6
+    mov eax, [t4]
+    add eax, [t6]
     mov [t7], eax
 
-    ; t8 = t5 + t7
-    mov eax, [t5]
-    add eax, [t7]
-    mov [t8], eax
-
-    ; t9 = x ^ 4
+    ; t8 = x ^ 4
     mov eax, [x]
     mov ecx, 4
     call _pow
-    mov [t9], eax
+    mov [t8], eax
 
-    ; t10 = t9 / 24
-    mov eax, [t9]
+    ; t9 = t8 / 24
+    mov eax, [t8]
     cdq
     mov ebx, 24
     idiv ebx
+    mov [t9], eax
+
+    ; t10 = t7 + t9
+    mov eax, [t7]
+    add eax, [t9]
     mov [t10], eax
-
-    ; t11 = t8 + t10
-    mov eax, [t8]
-    add eax, [t10]
-    mov [t11], eax
-
-    ; t1 = t11
-    mov [t1], eax
 
     ; Exit program
     mov eax, 1

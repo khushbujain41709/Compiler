@@ -6,13 +6,12 @@
 #include "semantic.h"
 #include "icg.h"
 #include "codegen.h"
-
 using namespace std;
 
 int main() {
     // 1. Read input file
     ifstream infile("C://Users//khushbu//OneDrive//Desktop//Compiler//compiler//input.txt");
-    if (!infile) {
+    if (!infile){
         cerr << "Error: Cannot open input.txt\n";
         return 1;
     }
@@ -31,7 +30,7 @@ int main() {
     for(const auto& t : tokens){
         cout<<"Type : "<<t.type<<", Value : "<<t.value<<"\n";
     }
-    cout << "Lexical analysis completed. Tokens: " << tokens.size() << "\n";
+    cout << "Lexical analysis completed. Tokens : " << tokens.size() << "\n";
 
     // 3. Parsing
     Node* ast = parse(tokens);
@@ -42,21 +41,18 @@ int main() {
     cout << "Parsing successful.\n";
 
     // 4. Semantic analysis
-    try {
+    try{
         semanticCheck(ast);
         cout << "Semantic analysis passed.\n";
-    } catch (const exception& e) {
-        cerr << "Semantic Error: " << e.what() << "\n";
+    }
+    catch (const exception& e){
+        cerr << "Semantic Error : " << e.what() << "\n";
         return 1;
     }
 
     // 5. Intermediate code generation
     vector<string> tac = generate3AC(ast);
-    // for(int i = 0;i<tac.size();i++){
-    //     cout<<tac.size()<<endl;
-    //     cout<<tac[i]<<" ";
-    // }
-    if (tac.empty()) {
+    if (tac.empty()){
         cerr << "Error: No intermediate code generated\n";
         return 1;
     }

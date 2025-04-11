@@ -3,6 +3,6 @@
 #include "parser.h"
 #include <vector>
 #include <string>
-
-std::vector<std::string> generate3AC(Node* root);
+using namespace std;
+vector<string> generate3AC(Node* root);
 #endif

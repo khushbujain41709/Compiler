@@ -3,6 +3,6 @@
 #include <vector>
 #include <string>
 #include <ostream>
-
-void generateAssembly(const std::vector<std::string>& tac, std::ostream& out);
+using namespace std;
+void generateAssembly(const vector<string>& tac, ostream& out);
 #endif
